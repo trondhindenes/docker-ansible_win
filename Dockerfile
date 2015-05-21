@@ -20,3 +20,4 @@ RUN cp ~/win_dsc/*.py /opt/ansible/ansible/lib/ansible/modules/core/windows
 ENV PATH /opt/ansible/ansible/bin:/bin:/usr/bin:/sbin:/usr/sbin
 ENV PYTHONPATH /opt/ansible/ansible/lib
 ENV ANSIBLE_LIBRARY /opt/ansible/ansible/library
+RUN cd ~

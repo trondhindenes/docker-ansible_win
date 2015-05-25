@@ -2,7 +2,7 @@
 FROM ubuntu:14.04
 MAINTAINER Trond Hindenes <trond@hindenes.com>
 RUN apt-get -y update && \
-    apt-get install -y python-yaml python-jinja2 python-httplib2 python-keyczar python-paramiko python-setuptools python-pkg-resources git python-pip nano
+    apt-get install -y python-yaml python-jinja2 python-httplib2 python-keyczar python-paramiko python-setuptools python-pkg-resources git python-pip nano sshpass
 RUN mkdir /etc/ansible/
 RUN echo '[local]\nlocalhost\n' > /etc/ansible/hosts
 RUN mkdir /opt/ansible/

@@ -29,8 +29,8 @@ RUN git submodule update --init
 RUN pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
 RUN mkdir ~/win_dsc/
 RUN git clone https://github.com/trondhindenes/Ansible-win_dsc.git ~/win_dsc/
-RUN cp ~/win_dsc/*.ps1 /opt/ansible/ansible/v2/ansible/modules/core/windows
-RUN cp ~/win_dsc/*.py /opt/ansible/ansible/v2/ansible/modules/core/windows
+RUN cp ~/win_dsc/*.ps1 /opt/ansible/ansible/v1/ansible/modules/core/windows
+RUN cp ~/win_dsc/*.py /opt/ansible/ansible/v1/ansible/modules/core/windows
 RUN cp ~/win_dsc/*.ps1 /opt/ansible/ansible/lib/ansible/modules/core/windows
 RUN cp ~/win_dsc/*.py /opt/ansible/ansible/lib/ansible/modules/core/windows
 

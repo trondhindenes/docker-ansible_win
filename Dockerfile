@@ -24,17 +24,23 @@ RUN mkdir /etc/ansible/
 RUN echo '[local]\nlocalhost\n' > /etc/ansible/hosts
 RUN mkdir /opt/ansible/
 RUN git clone http://github.com/ansible/ansible.git /opt/ansible/ansible
+
 WORKDIR /opt/ansible/ansible
 RUN git submodule update --init
 RUN pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
-RUN mkdir ~/win_dsc/
-RUN git clone https://github.com/trondhindenes/Ansible-win_dsc.git ~/win_dsc/
-RUN cp ~/win_dsc/*.ps1 /opt/ansible/ansible/v1/ansible/modules/core/windows
-RUN cp ~/win_dsc/*.py /opt/ansible/ansible/v1/ansible/modules/core/windows
-RUN cp ~/win_dsc/*.ps1 /opt/ansible/ansible/lib/ansible/modules/core/windows
-RUN cp ~/win_dsc/*.py /opt/ansible/ansible/lib/ansible/modules/core/windows
 
+WORKDIR /tmp
+RUN wget http://hindenes.com/files/ansible.cfg
+#RUN wget http://hindenes.com/files/krb5.conf
+#RUN wget http://hindenes.com/files/hosts
+RUN wget https://raw.githubusercontent.com/trondhindenes/armrest/master/AnsibleInventory/arminventory.py
+
+RUN cp krb5.conf /etc
+RUN cp ansible.cfg /etc/ansible
+RUN cp hosts /etc/ansible/inventory
+RUN cp arminventory.py /etc/ansible/inventory
+RUN chmod +x /etc/ansible/inventory/arminventory.py
 ENV PATH /opt/ansible/ansible/bin:/bin:/usr/bin:/sbin:/usr/sbin
 ENV PYTHONPATH /opt/ansible/ansible/lib
-ENV ANSIBLE_LIBRARY /opt/ansible/ansible/library
-RUN cd ~
+RUN source /opt/ansible/ansible/hacking/env-setup
+WORKDIR /opt/ansible/

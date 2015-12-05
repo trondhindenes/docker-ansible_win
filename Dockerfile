@@ -1,6 +1,7 @@
 # Latest Ubuntu LTS
 FROM ubuntu:14.04
 MAINTAINER Trond Hindenes <trond@hindenes.com>
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get -y update && \
     apt-get install -y python-yaml python-jinja2 python-httplib2 python-keyczar python-paramiko python-setuptools python-pkg-resources git python-pip nano sshpass
 
@@ -21,6 +22,7 @@ EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
 
 RUN mkdir /etc/ansible/
+RUN mkdir /etc/ansible/inventory
 RUN echo '[local]\nlocalhost\n' > /etc/ansible/hosts
 RUN mkdir /opt/ansible/
 RUN git clone http://github.com/ansible/ansible.git /opt/ansible/ansible
@@ -30,17 +32,17 @@ RUN git submodule update --init
 RUN pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
 
 WORKDIR /tmp
-RUN wget http://hindenes.com/files/ansible.cfg
+RUN wget https://raw.githubusercontent.com/trondhindenes/docker-ansible_win/master/ansible.cfg
 #RUN wget http://hindenes.com/files/krb5.conf
 #RUN wget http://hindenes.com/files/hosts
 RUN wget https://raw.githubusercontent.com/trondhindenes/armrest/master/AnsibleInventory/arminventory.py
 
-RUN cp krb5.conf /etc
+#RUN cp krb5.conf /etc
 RUN cp ansible.cfg /etc/ansible
-RUN cp hosts /etc/ansible/inventory
+#RUN cp hosts /etc/ansible/inventory
 RUN cp arminventory.py /etc/ansible/inventory
 RUN chmod +x /etc/ansible/inventory/arminventory.py
 ENV PATH /opt/ansible/ansible/bin:/bin:/usr/bin:/sbin:/usr/sbin
 ENV PYTHONPATH /opt/ansible/ansible/lib
-RUN source /opt/ansible/ansible/hacking/env-setup
+
 WORKDIR /opt/ansible/

@@ -1,10 +1,21 @@
 # Latest Ubuntu LTS
 FROM ubuntu:14.04
 MAINTAINER Trond Hindenes <trond@hindenes.com>
+#Setup things
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+ENV DEBIAN_FRONTEND noninteractive
+
+#Packages
 RUN apt-get -y update && \
     apt-get install -y python-yaml python-jinja2 python-httplib2 python-keyczar python-paramiko python-setuptools python-pkg-resources git python-pip nano sshpass
 
+#Packages for windows
+#RUN sudo apt-get install krb5-user -y
+#RUN sudo apt-get install libkrb5-dev -y
+
+#Python Packages
+RUN pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
+#RUN sudo pip install kerberos
 
 #Set the root pass
 RUN apt-get update && apt-get install -y openssh-server
@@ -23,13 +34,17 @@ CMD ["/usr/sbin/sshd", "-D"]
 
 RUN mkdir /etc/ansible/
 RUN mkdir /etc/ansible/inventory
-RUN echo '[local]\nlocalhost\n' > /etc/ansible/hosts
+RUN mkdir /etc/ansible/modules
+RUN touch /etc/ansible/inventory/hosts
 RUN mkdir /opt/ansible/
 RUN git clone http://github.com/ansible/ansible.git /opt/ansible/ansible
 
 WORKDIR /opt/ansible/ansible
 RUN git submodule update --init
-RUN pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
+
+WORKDIR /opt/ansible/modules
+RUN git clone https://github.com/trondhindenes/ansible-arm-deployment.git ansible_arm
+RUN git clone https://github.com/trondhindenes/Ansible-Auto-Generated-Modules.git dsc_modules
 
 WORKDIR /tmp
 RUN wget https://raw.githubusercontent.com/trondhindenes/docker-ansible_win/master/ansible.cfg
